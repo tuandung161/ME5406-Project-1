@@ -45,7 +45,7 @@ class Frozen_Lake_Env:
         for x in range(self.len_x):
             for y in range(self.len_y):
                 if self.env[x][y] == self.type["start"]:
-                    self.position = [x,y]
+                    return [x,y]
 
     #Run 1 step then return reward & next step
     def step(self, direction):
@@ -69,6 +69,9 @@ class Frozen_Lake_Env:
                 self.complete = True
             return self.position, reward
         
+    def reset(self):
+        self.position = self.get_init_pos()
+        
 
 
 if __name__ == '__main__':
@@ -76,7 +79,7 @@ if __name__ == '__main__':
     env = Frozen_Lake_Env(map_size)
     env.draw_map()
     print(env.env)
-    env.get_init_pos()
+    env.reset()
     print("Initial Position: " + str(env.position))
     i = 0
     for i in range(6):
@@ -87,6 +90,7 @@ if __name__ == '__main__':
         print("Reward: " + str(reward))
         if env.complete == True:
             break
+    
         
         
 
