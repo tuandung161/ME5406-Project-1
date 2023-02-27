@@ -19,6 +19,7 @@ class Frozen_Lake_Env:
                        "down":  [1,0]}
         
         self.position = []
+        self.state = 0
         self.complete = False
         
 
@@ -46,19 +47,29 @@ class Frozen_Lake_Env:
             for y in range(self.len_y):
                 if self.env[x][y] == self.type["start"]:
                     return [x,y]
+    
+    def pos_to_state(self, position): 
+        n = 0
+        d = {}
+        for i in range(self.len_x):
+            for j in range(self.len_y):
+                d[(i,j)] = n
+                n += 1
+        return d[(position[0],position[1])]
 
     #Run 1 step then return reward & next step
     def step(self, direction):
-        [dx, dy] = self.action[direction]
+        [dx, dy] = list(self.action.values())[direction]
         new_pos = [self.position[0]+dx, self.position[1]+dy]   
 
         reward = 0 
 
         #check if out of bound
         if not (0 <= new_pos[0] < self.len_x and 0 <= new_pos[1] < self.len_y):
-            return self.position, reward
+            return self.state , reward, self.complete
         else: # if not then update new position
             self.position = new_pos
+            self.state = self.pos_to_state(self.position)
             if self.env[self.position[0]][self.position[1]] == self.type["start"] or self.env[self.position[0]][self.position[1]] == self.type["ice"]:
                 reward += 0
             elif self.env[self.position[0]][self.position[1]] == self.type["hole"]:
@@ -67,10 +78,12 @@ class Frozen_Lake_Env:
             elif self.env[self.position[0]][self.position[1]] == self.type["goal"]:
                 reward += 1
                 self.complete = True
-            return self.position, reward
+            return self.state, reward, self.complete
         
     def reset(self):
         self.position = self.get_init_pos()
+        self.complete = False
+        self.state = self.pos_to_state(self.position)
         
 
 
@@ -83,14 +96,11 @@ if __name__ == '__main__':
     print("Initial Position: " + str(env.position))
     i = 0
     for i in range(6):
-        dir = input("Input Action: ")
-        pos,reward = env.step(dir)
+        direction = int(input("Input Action: "))
+        state, reward, complete = env.step(direction)
         print("Current Position: " + str(env.position))
+        print("Current State: " + str(env.state))
         print("Complete: " + str(env.complete))
         print("Reward: " + str(reward))
-        if env.complete == True:
+        if complete == True:
             break
-    
-        
-        
-
