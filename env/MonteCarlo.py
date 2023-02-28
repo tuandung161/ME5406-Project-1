@@ -28,12 +28,16 @@ class MonteCarlo():
                 
         return Q_table, Return_table, N_table
                         
-    
+                           
     def greedy_policy(self, state):
-        if self.epsilon < random.uniform(0,1):
+        if self.epsilon > random.uniform(0,1):
             return random.randint(0,3)
         else:
-            return max(list(range(self.n_action)), key=lambda x: self.Q_table[(state, x)])
+            policy = []
+            for i in range(self.n_action):
+                policy.append(self.Q_table[(state, i)])
+            return policy.index(max(policy))
+
     
     def run_episode(self):
         state_action = []

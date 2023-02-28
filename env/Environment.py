@@ -60,7 +60,7 @@ class Frozen_Lake_Env:
     #Run 1 step then return reward & next step
     def step(self, direction):
         [dx, dy] = list(self.action.values())[direction]
-        new_pos = [self.position[0]+dx, self.position[1]+dy]   
+        new_pos = [self.position[0]+dx, self.position[1]+dy]
 
         reward = 0 
 
@@ -90,7 +90,7 @@ class Frozen_Lake_Env:
 if __name__ == '__main__':
     map_size = int(input("Select Map Size: "))
     env = Frozen_Lake_Env(map_size)
-    env.draw_map()
+    #env.draw_map()
     print(env.env)
     env.reset()
     print("Initial Position: " + str(env.position))
