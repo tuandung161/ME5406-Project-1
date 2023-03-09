@@ -5,7 +5,7 @@ from PIL import Image
 
 class Frozen_Lake_Env:
     def __init__(self, size):
-        self.env_list = {4:"./map_4_4.p"}
+        self.env_list = {4:"./map_4_4.p", 10:"./map_10_10.p"}
         self.env = np.array(pickle.load(open(self.env_list[size], "rb")))
         self.len_x, self.len_y = self.env.shape
         self.type = {"start":0,
@@ -22,6 +22,8 @@ class Frozen_Lake_Env:
         self.state = 0
         self.complete = False
         
+        self.size = size
+        
 
     #Visualize Environment
     def draw_map(self):
@@ -34,7 +36,7 @@ class Frozen_Lake_Env:
                 ax.imshow(Image.open("icons/hole.png"))
             elif self.env[j][k] == self.type["goal"]:
                 ax.imshow(Image.open("icons/goal.png"))
-            if k < 3:
+            if k < (self.size-1):
                 k += 1
             else:
                 k = 0
@@ -90,7 +92,7 @@ class Frozen_Lake_Env:
 if __name__ == '__main__':
     map_size = int(input("Select Map Size: "))
     env = Frozen_Lake_Env(map_size)
-    #env.draw_map()
+    env.draw_map()
     print(env.env)
     env.reset()
     print("Initial Position: " + str(env.position))

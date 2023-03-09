@@ -1,8 +1,9 @@
 from Environment import Frozen_Lake_Env
 import random
+import numpy as np
 
 class SARSA():
-    def __init__(self, map_size=4, n_episode = 100000, learn_rate=0.05, epsilon=0.1, gamma=0.5):
+    def __init__(self, map_size=10, n_episode = 10000, learn_rate=0.1, epsilon=0.1, gamma=0.9):
         self.map_size = map_size
         self.env = Frozen_Lake_Env(self.map_size)
 
@@ -24,20 +25,20 @@ class SARSA():
         
 
     def initialize(self):
-        Q_table = {}
-        for i in range(self.n_observation):
-            for j in range(self.n_action):
-                Q_table[(i,j)] = 0
+        Q_table = np.zeros((self.n_observation, self.n_action))
         return Q_table
     
     def greedy_policy(self, state):
-        if self.epsilon > random.uniform(0,1):
+        if random.uniform(0,1) < self.epsilon:
             return random.randint(0,3)
         else:
             policy = []
             for i in range(self.n_action):
-                policy.append(self.Q_table[(state, i)])
-            return policy.index(max(policy))
+                policy.append(self.Q_table[state][i])
+            max_ = max(policy)
+            max_index = random.choice([i for i in range(len(policy)) if policy[i] == max_])
+            #print("Max index: ", max_index)
+            return max_index
 
     def run_episode(self):
         self.env.reset()
@@ -52,7 +53,7 @@ class SARSA():
             next_state, reward, complete = self.env.step(action)
             #print(state, complete)
             next_action = self.greedy_policy(next_state)
-            self.Q_table[(state,action)] += self.learn_rate * (reward + self.gamma * self.Q_table[(next_state, next_action)] - self.Q_table[((state,action))])
+            self.Q_table[state][action] += self.learn_rate * (reward + self.gamma * self.Q_table[next_state][next_action] - self.Q_table[state][action])
             
             #print("Current Step: " + str(current_step))
             
