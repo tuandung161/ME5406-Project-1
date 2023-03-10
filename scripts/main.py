@@ -4,7 +4,7 @@ from QLearning import QLearning
 
 if __name__ == "__main__": 
     #Initialize & train robot:
-    map_size = int(input("Input Map Size: "))
+    map_size = int(input("Map Option: 4 or 10\nInput Map Size: "))
     algo = int(input("1: Monte Carlo\n2: SARSA\n3: Q-Learning\nChoose learning algorithms: "))
     if algo == 1: 
         dynamic_epsilon = int(input("1: default\n2: decaying\nEpsilon Mode: "))
